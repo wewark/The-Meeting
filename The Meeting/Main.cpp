@@ -6,42 +6,68 @@ using namespace std;
 int main() {
 	while (true)
 	{
-		// initialize the map
+		// Setting new player
+		Player player1;
+		Room::setPlayer(player1);
+
+		// Game intro
+		system("cls");
+		cout << endl << "You wake up on a bed in a house you don't know. You look around there is no one in the house. You don't remember anything. But you have a strong feeling that you've forgot something important You keep looking around trying to remember anything..." << endl;
+		system("pause");
+		system("cls");
+		cout << endl << "You feel your phone in your pocket vibrating, it's a message from John, your interviewer. It says \"Today at " << player1.getDeadlineTime() << "\" You suddenly remember everything..." << endl;
+		system("pause");
+		system("cls");
+		cout << endl << "You have an interview at Monsters Inc. at " << player1.getDeadlineTime() << ". It's " << player1.getTime() << " now. Hurry up you don't have much time left." << endl;
+		system("pause");
+		system("cls");
+
+		// Initialize the map
 		Room bedroom1(
 			"A Bedroom",
-			"desc"
+			"You're in a bedroom, only a small lamp is on. The bed is white and looks messy, above it is a portrait of a middle-aged man who seems to be a soldier. The rest of the room furniture is all covered in dust. To the north you can see a door leading to a living room, to the south there is a balcony, at your east is a wall with the picture of the soldier on it and at your west is a bathroom."
 		);
 		Room balcony1(
 			"A Balcony",
-			"desc"
+			"It's an empty balcony. You can see the street. It's midday and normal people in the street. The balcony's fence surround you at your east, south and west. At your north is the bedroom.",
+			"balcony"
 		);
 		Room toilet1(
 			"A Toilet",
-			"desc"
+			"White light, a bath, a shower, a tap. Nothing looks wrong about this bathroom. To the north you can see a hall. The east leads to a bedroom. There is nothing at your south or west."
 		);
 		Room livingroom(
 			"A Living Room",
-			"desc"
+			"Looks like there is no one in this house, everything is turned off except for some small lights. There is a couch, a TV with nothing connected to it, and a bunch of pictures on the walls. There is a balcony at you east, your west leads to a hall and two bedrooms, one at your north and another at your south."
 		);
 		Room balcony2(
 			"A Balcony",
-			"desc"
+			"It's an empty balcony. You can see the street. It's midday and normal people in the street. The balcony's fence surround you at your east, south and north. At your west is the living room.",
+			"balcony"
 		);
 		Room bedroom2(
 			"A Bedroom",
-			"desc"
+			"This bedroom looks just like the other bedroom. One bed in the middle of the room. To your east is a bathroom, the south leads to the living room, to your west is a wall that is so clean and to the north is another wall.",
+			"bedroom2"
 		);
 		Room toilet2(
 			"A Toilet",
-			"desc"
+			"White light, a bath, a shower, a tap. Nothing looks wrong about this bathroom. To the north you can see a hall. The east leads to a bedroom. There is nothing at your south or west."
 		);
 		Room hall(
 			"A Hall",
-			"desc"
+			"This hall leads from the living room to the door of the house. At your north is a door, it seems to lead to the kitchen, at your south is a toilet, your east leads to the living room and at your west is the door of the house.",
+			"hall"
 		);
 		Room stairs(
 			"Stairs",
-			"desc"
+			"desc",
+			"end"
+		);
+		Room darkRoom(
+			"A Dark Room",
+			"It's very dark. You can't see anything.",
+			"secret"
 		);
 
 		// Linking rooms
@@ -54,18 +80,34 @@ int main() {
 		hall.linkTo(toilet1, "south");
 		hall.linkTo(stairs, "west");
 		bedroom2.linkTo(toilet2, "east");
+		bedroom2.linkTo(darkRoom, "west");
 
-		
+
 		// Start from bedroom1
 		Room *currentRoom = &bedroom1;
-		Room temp = *currentRoom;
 
-		while (true)
+		while (player1.gameOn())
 		{
-			cout << *currentRoom;
-			//temp = *currentRoom;
-			cin >> *currentRoom;
+			cout << currentRoom;
+			cin >> currentRoom;
 		}
+
+		if (player1.quitted())
+			break;
+
+		if (player1.playerWon())
+		{
+			cout << "You've finally got out of the house and it's " << player1.getTime() << ", it took you " << player1.getPassedMins() << " mins" << endl << "Good Job!" << endl;
+		}
+		else
+			cout << "It's already " << player1.getTime() << ", you just missed the meeting. You've lost your job." << endl;
+
+		string response;
+		cout << "again or quit?" << endl;
+		cin >> response;
+
+		if (response != "again")
+			break;
 	}
 	return 0;
 }
