@@ -47,11 +47,7 @@ string Player::getTime() {
 }
 
 string Player::getDeadlineTime() {
-	min += deadline - passedMins;
-	hour += min / 60;
-	min %= 60;
-	hour %= 24;
-	string hrs = to_string(hour);
+	string hrs = to_string((hour + 1) % 24);
 	string mins = to_string(min);
 
 	if (hrs.length() == 1)
