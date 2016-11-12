@@ -35,27 +35,33 @@ bool Player::tooLate() {
 }
 
 string Player::getTime() {
-	string hrs = to_string(hour);
+	string hrs = to_string(hour % 12);
 	string mins = to_string(min);
 
+	string ampm = "AM";
+	if ((hour + 1) % 24 >= 12)
+		ampm = "PM";
 	if (hrs.length() == 1)
 		hrs = "0" + hrs;
 	if (mins.length() == 1)
 		mins = "0" + mins;
 
-	return hrs + ":" + mins;
+	return hrs + ":" + mins + " " + ampm;
 }
 
 string Player::getDeadlineTime() {
-	string hrs = to_string((hour + 1) % 24);
+	string hrs = to_string((hour + 1) % 12);
 	string mins = to_string(min);
 
+	string ampm = "AM";
+	if ((hour + 1) % 24 >= 12)
+		ampm = "PM";
 	if (hrs.length() == 1)
 		hrs = "0" + hrs;
 	if (mins.length() == 1)
 		mins = "0" + mins;
 
-	return hrs + ":" + mins;
+	return hrs + ":" + mins + " " + ampm;
 }
 
 void Player::playerEscaped() {
