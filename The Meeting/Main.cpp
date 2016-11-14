@@ -21,28 +21,31 @@ int main() {
 		cout << endl << "You have an interview at Monsters Inc. at " << player1.getDeadlineTime() << ". It's " << player1.getTime() << " now. Hurry up you don't have much time left." << endl;
 		system("pause");
 		system("cls");
+		cout << endl << "You can only go north, south, east or west." << endl;
+		system("pause");
+		system("cls");
 
 		// Initialize the map
 		Room bedroom1(
 			"A Bedroom",
-			"You're in a bedroom, only a small lamp is on. The bed is white and looks messy, above it is a portrait of a middle-aged man who seems to be a soldier. The rest of the room furniture is all covered in dust. To the north you can see a door leading to a living room, to the south there is a balcony, at your east is a wall with the picture of the soldier on it and at your west is a bathroom."
+			"You're in a bedroom, only a small lamp is on. The bed is white and looks messy, above it is a portrait of a middle-aged man who seems to be a soldier. The rest of the room furniture is all covered in dust.\n\nTo the north you can see a door leading to a living room, to the south there is a balcony, at your east is a wall with the picture of the soldier on it and at your west is a bathroom."
 		);
 		Room balcony1(
 			"A Balcony",
-			"It's an empty balcony. You can see the street. It's midday and normal people in the street. The balcony's fence surround you at your east, south and west. At your north is the bedroom.",
+			"It's an empty balcony. You can see the street. It's midday and normal people in the street.\n\nThe balcony's fence surround you at your east, south and west. At your north is the bedroom.",
 			"balcony"
 		);
 		Room toilet1(
 			"A Toilet",
-			"White light, a bath, a shower, a tap. Nothing looks wrong about this bathroom. To the north you can see a hall. The east leads to a bedroom. There is nothing at your south or west."
+			"White light, a bath, a shower, a tap. Nothing looks wrong about this bathroom.\n\nTo the north you can see a hall. The east leads to a bedroom. There is nothing at your south or west."
 		);
 		Room livingroom(
 			"A Living Room",
-			"Looks like there is no one in this house, everything is turned off except for some small lights. There is a couch, a TV with nothing connected to it, and a bunch of pictures on the walls. There is a balcony at you east, your west leads to a hall and two bedrooms, one at your north and another at your south."
+			"Looks like there is no one in this house, everything is turned off except for some small lights. There is a couch, a TV with nothing connected to it, and a bunch of pictures on the walls.\n\nThere is a balcony at you east, your west leads to a hall and two bedrooms, one at your north and another at your south."
 		);
 		Room balcony2(
 			"A Balcony",
-			"It's an empty balcony. You can see the street. It's midday and normal people in the street. The balcony's fence surround you at your east, south and north. At your west is the living room.",
+			"It's an empty balcony. You can see the street. It's midday and normal people in the street.\n\nThe balcony's fence surround you at your east, south and north. At your west is the living room.",
 			"balcony"
 		);
 		Room bedroom2(
@@ -52,7 +55,7 @@ int main() {
 		);
 		Room toilet2(
 			"A Toilet",
-			"White light, a bath, a shower, a tap. Nothing looks wrong about this bathroom. To the north you can see a hall. The east leads to a bedroom. There is nothing at your south or west."
+			"White light, a bath, a shower, a tap. Nothing looks wrong about this bathroom. Nothing to the north. The west leads to a bedroom. There is nothing at your south or east."
 		);
 		Room hall(
 			"A Hall",

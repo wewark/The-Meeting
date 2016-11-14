@@ -150,6 +150,7 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 		// If the direction leads no nothing (the direction pointer is pointing at NULL)
 		if (currentRoom->north == NULL)
 		{
+			cout << endl;
 			if (currentRoom->type == "balcony")
 				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
 			
@@ -175,6 +176,7 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 	{
 		if (currentRoom->south == NULL)
 		{
+			cout << endl;
 			if (currentRoom->type == "balcony")
 				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
 
@@ -195,6 +197,7 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 	{
 		if (currentRoom->east == NULL)
 		{
+			cout << endl;
 			if (currentRoom->type == "balcony")
 				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
 
@@ -212,6 +215,7 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 	{
 		if (currentRoom->west == NULL)
 		{
+			cout << endl;
 			if (currentRoom->type == "balcony")
 				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
 
@@ -226,7 +230,7 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 		else if (currentRoom->type == "hall")
 		{
 			if (!Room::player->hasKey())
-				cout << "The door of the house is locked!!" << endl;
+				cout << endl << "The door of the house is locked!!" << endl;
 
 			else if (Room::player->hasKey())
 				Room::player->playerEscaped();
@@ -237,17 +241,17 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 		{
 			if (Room::secretCounter == 0)
 			{
-				cout << "You touched the wall, but a strange thing happend, the wall moved a little bit." << endl;
+				cout << endl << "You touched the wall, but a strange thing happend, the wall moved a little bit." << endl;
 				Room::secretCounter++;
 			}
 			else if (Room::secretCounter == 1)
 			{
-				cout << "The wall moved alittle bit more, it seems to be rotating around its center. It's so heavy." << endl;
+				cout << endl << "The wall moved alittle bit more, it seems to be rotating around its center. It's so heavy." << endl;
 				Room::secretCounter++;
 			}
 			else if (Room::secretCounter == 2)
 			{
-				cout << "OMG It's moving by itself now, rotating around its center. A very dark room appeared behind it." << endl << "There is a key in the dark room on the floor, you picked that key up." << endl;
+				cout << endl << "OMG It's moving by itself now, rotating around its center. A very dark room appeared behind it." << endl << "There is a key in the dark room on the floor, you picked that key up." << endl;
 				Room::player->takeKey();
 				Room::secretCounter++;
 				currentRoom = currentRoom->west;
