@@ -6,6 +6,7 @@ using namespace std;
 int main() {
 	while (true)
 	{
+		// branch 2
 		// Setting new player
 		Player player1;
 		Room::setPlayer(player1);
