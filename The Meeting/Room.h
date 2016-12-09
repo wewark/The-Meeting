@@ -1,11 +1,9 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "Player.h"
 using namespace std;
 
 class Room;
-class Player;
 
 string operator ! (string&);
 istream &operator >> (istream &, Room *&);
@@ -21,8 +19,6 @@ private:
 	Room *east;
 	Room *west;
 	string type;
-	static Player *player;
-	static int secretCounter;
 
 public:
 	Room(string name, string description);
@@ -34,7 +30,6 @@ public:
 	const Room *getLinked(string direction);
 	void printLinked();
 	void linkTo(Room &r, string direction);
-	static void setPlayer(Player &);
 
 	friend istream &operator >> (istream &, Room *&);
 	friend ostream &operator << (ostream &, const Room *);

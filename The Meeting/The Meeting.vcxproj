@@ -146,11 +146,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Agent.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Agent.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Room.h" />
   </ItemGroup>

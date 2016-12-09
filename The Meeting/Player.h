@@ -1,32 +1,20 @@
 #pragma once
+#include "Agent.h"
 #include <string>
 using namespace std;
 
-class Player
+class Player : public Agent
 {
 private:
-	int hour;
-	int min;
-	static int deadline;
-	int passedMins;
 	bool won;
-	bool key;
 	bool quit;
 
 public:
-	Player();
+	Player(string name, Room *startingRoom);
 	~Player();
-	void operator ++ (int);
-	bool tooLate();
+	bool act();
 	void playerEscaped();
-	string getTime();
-	string getDeadlineTime();
 	bool gameOn();
-	void takeKey();
-	bool hasKey();
 	bool playerWon();
-	int getPassedMins();
-	void quitGame();
-	bool quitted();
 };
 

@@ -1,12 +1,26 @@
 #include <iostream>
 #include <string>
+#include "Agent.h"
 #include "Room.h"
+#include "Monster.h"
+#include "Player.h"
 using namespace std;
 
 int main() {
+	Room y("d", "d");
+	Agent* m1 = new Monster("name1", &y);
+	Agent* m2 = new Monster("name2", &y);
+	Agent* player = new Player("pname", &y);
+	Agent **agents = new Agent*[3];
+	agents[0] = player;
+	agents[1] = m1;
+	agents[2] = m2;
+
+	cin.get();
+
+	/*
 	while (true)
 	{
-		// branch 2
 		// Setting new player
 		Player player1;
 		Room::setPlayer(player1);
@@ -113,5 +127,6 @@ int main() {
 		if (response != "again")
 			break;
 	}
+	*/
 	return 0;
 }

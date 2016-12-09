@@ -1,15 +1,11 @@
 #include "Room.h"
 
-int Room::secretCounter = 0;
-Player *Room::player = NULL;
 
 Room::Room(string name, string description) {
 
 	this->name = name;
 	this->description = description;
 	type = "room";
-
-	secretCounter = 0;
 
 	// Linked to nothing
 	north = NULL;
@@ -24,8 +20,6 @@ Room::Room(string name, string description, string type) {
 	this->description = description;
 	this->type = type;
 
-	secretCounter = 0;
-
 	// Linked to nothing
 	north = NULL;
 	south = NULL;
@@ -35,10 +29,6 @@ Room::Room(string name, string description, string type) {
 
 Room::~Room()
 {
-}
-
-void Room::setPlayer(Player &player1) {
-	player = &player1;
 }
 
 string Room::getName() const {
@@ -143,7 +133,7 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 
 	if (response == "quit")
 	{
-		Room::player->quitGame();
+		//Room::player->quitGame();
 	}
 	else if (response == "north")
 	{
@@ -167,9 +157,6 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 		// Else change the current room to be the other room
 		else
 			currentRoom = currentRoom->north;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
 	}
 
 	else if (response == "south")
@@ -188,9 +175,6 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 		}
 		else
 			currentRoom = currentRoom->south;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
 	}
 
 	else if (response == "east")
@@ -206,9 +190,6 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 		}
 		else
 			currentRoom = currentRoom->east;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
 	}
 
 	else if (response == "west")
@@ -229,15 +210,15 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 		// The door of the house
 		else if (currentRoom->type == "hall")
 		{
-			if (!Room::player->hasKey())
+			/*if (!Room::player->hasKey())
 				cout << endl << "The door of the house is locked!!" << endl;
 
 			else if (Room::player->hasKey())
-				Room::player->playerEscaped();
+				Room::player->playerEscaped();*/
 		}
 
 		// The wall leading to the secret room
-		else if (currentRoom->type == "bedroom2")
+		/*else if (currentRoom->type == "bedroom2")
 		{
 			if (Room::secretCounter == 0)
 			{
@@ -258,13 +239,10 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 			}
 			else
 				currentRoom = currentRoom->west;
-		}
+		}*/
 
 		else
 			currentRoom = currentRoom->west;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
 	}
 
 	else
@@ -274,7 +252,6 @@ istream &operator >> (istream &strm, Room *&currentRoom) {
 
 ostream &operator << (ostream &strm, const Room *currentRoom) {
 	strm << endl << currentRoom->getName() << endl << endl;
-	strm << "Time: " << Room::player->getTime() << endl;
 	strm << currentRoom->getDescription() << endl << endl;
 	return strm;
 }
