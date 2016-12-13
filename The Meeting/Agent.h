@@ -15,5 +15,6 @@ public:
 	Agent(string name, Room *startingRoom);
 	~Agent();
 	string getName() { return name; }
+	bool move(string direction);
 };
 

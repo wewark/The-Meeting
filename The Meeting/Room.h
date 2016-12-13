@@ -1,17 +1,16 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "Agent.h"
 using namespace std;
 
 class Room;
-
-string operator ! (string&);
-istream &operator >> (istream &, Room *&);
-ostream &operator << (ostream &, const Room *);
+class Agent;
+const int MAX_SIZE = 2;
 
 class Room
 {
-private:
+protected:
 	string name;
 	string description;
 	Room *north;
@@ -19,19 +18,23 @@ private:
 	Room *east;
 	Room *west;
 	string type;
+	bool block;
+	Agent* occupants[MAX_SIZE];
+	int size = 0;
 
 public:
+	Room();
 	Room(string name, string description);
 	Room(string name, string description, string type);
 	~Room();
 	string getName() const;
 	string getDescription() const;
+	void makeBlock();
 	void link(Room *r, string direction);
-	const Room *getLinked(string direction);
+	Room *getLinked(string direction);
 	void printLinked();
-	void linkTo(Room &r, string direction);
-
-	friend istream &operator >> (istream &, Room *&);
-	friend ostream &operator << (ostream &, const Room *);
+	void enter(Agent *a);
+	void leave(Agent *a);
+	int getSize();
 };
 

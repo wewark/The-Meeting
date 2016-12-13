@@ -14,3 +14,15 @@ Agent::Agent(string name, Room *startingRoom)
 Agent::~Agent()
 {
 }
+
+bool Agent::move(string direction)
+{
+	if (currentRoom->getLinked(direction) != NULL)
+	{
+		currentRoom->leave(this);
+		currentRoom = currentRoom->getLinked(direction);
+		currentRoom->enter(this);
+		return true;
+	}
+	return false;
+}
