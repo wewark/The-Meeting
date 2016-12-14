@@ -9,6 +9,7 @@ Agent::Agent(string name, Room *startingRoom)
 {
 	this->name = name;
 	currentRoom = startingRoom;
+	currentRoom->enter(this);
 }
 
 Agent::~Agent()

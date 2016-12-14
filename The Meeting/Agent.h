@@ -11,6 +11,8 @@ protected:
 	string name;
 public:
 	virtual bool act() = 0;
+	virtual char nextMove() = 0;
+	virtual void startMoving() = 0;
 	Agent();
 	Agent(string name, Room *startingRoom);
 	~Agent();

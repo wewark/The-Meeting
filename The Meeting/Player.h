@@ -16,5 +16,7 @@ public:
 	void playerEscaped();
 	bool gameOn();
 	bool playerWon();
+	char nextMove() { return 0; };
+	void startMoving() {};
 };
 

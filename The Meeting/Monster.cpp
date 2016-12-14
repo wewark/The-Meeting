@@ -33,3 +33,16 @@ void Monster::startMoving()
 {
 	moving = true;
 }
+
+char Monster::nextMove()
+{
+	if (path[pathStep] == "north")
+		return 'N';
+	else if (path[pathStep] == "south")
+		return 'S';
+	else if (path[pathStep] == "east")
+		return 'E';
+	else if (path[pathStep] == "west")
+		return 'W';
+	return 'F';
+}

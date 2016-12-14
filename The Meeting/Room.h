@@ -6,7 +6,8 @@ using namespace std;
 
 class Room;
 class Agent;
-const int MAX_SIZE = 2;
+#define MAX_SIZE 2
+#define MAP_SIZE 11
 
 class Room
 {
@@ -20,7 +21,7 @@ protected:
 	string type;
 	bool block;
 	Agent* occupants[MAX_SIZE];
-	int size = 0;
+	int occupantsSize = 0;
 
 public:
 	Room();
@@ -29,7 +30,9 @@ public:
 	~Room();
 	string getName() const;
 	string getDescription() const;
+	static void printMap(Room** room);
 	void makeBlock();
+	bool isBlock();
 	void link(Room *r, string direction);
 	Room *getLinked(string direction);
 	void printLinked();

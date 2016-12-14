@@ -15,5 +15,6 @@ public:
 	~Monster();
 	bool act();
 	void startMoving();
+	char nextMove();
 };
 

@@ -12,7 +12,30 @@ Player::~Player()
 
 bool Player::act()
 {
-	return false;
+	currentRoom->printLinked();
+	string response;
+	cin >> response;
+	while (
+		!(response == "north" || response == "south" ||
+			response == "east" || response == "west" ||
+			response == "wait")
+		|| (response == "north" || response == "south" ||
+			response == "east" || response == "west")
+		&& currentRoom->getLinked(response) == NULL)
+	{
+		cout << "Wrong choice! Try again" << endl;
+		cin >> response;
+	}
+	if (response == "north" || response == "south" ||
+		response == "east" || response == "west")
+	{
+		currentRoom->leave(this);
+		currentRoom = currentRoom->getLinked(response);
+		currentRoom->enter(this);
+	}
+	if (currentRoom->getSize() > 1)
+		return false;
+	return true;
 }
 
 void Player::playerEscaped() {
