@@ -51,6 +51,16 @@ string Room::getDescription() const {
 	return description;
 }
 
+void Room::setNum(int n)
+{
+	roomNum = n;
+}
+
+int Room::getNum() const
+{
+	return roomNum;
+}
+
 void Room::printMap(Room** room)
 {
 	for (int i = 0; i < MAP_SIZE; i++)
@@ -71,6 +81,11 @@ void Room::printMap(Room** room)
 void Room::makeBlock()
 {
 	block = true;
+}
+
+void Room::unBlock()
+{
+	block = false;
 }
 
 bool Room::isBlock()
@@ -107,14 +122,14 @@ Room *Room::getLinked(string direction) {
 void Room::printLinked() {
 	cout << "You can go:" << endl;
 	if (north != NULL)
-		cout << "North" << endl;
+		cout << "North (n)" << endl;
 	if (south != NULL)
-		cout << "South" << endl;
+		cout << "South (s)" << endl;
 	if (east != NULL)
-		cout << "East" << endl;
+		cout << "East (e)" << endl;
 	if (west != NULL)
-		cout << "West" << endl;
-	cout << "or wait" << endl;
+		cout << "West (w)" << endl;
+	cout << "Wait (wt)" << endl;
 }
 
 void Room::enter(Agent *a)
@@ -134,7 +149,7 @@ void Room::leave(Agent *a)
 	occupantsSize--;
 }
 
-int Room::getSize()
+int Room::getOccupantsSize()
 {
 	return occupantsSize;
 }

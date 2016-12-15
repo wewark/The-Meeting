@@ -7,6 +7,7 @@ class Monster : public Agent
 private:
 	string *path;
 	bool moving;
+	bool chasing;
 	int pathStep;
 	int pathSz;
 public:
@@ -15,6 +16,10 @@ public:
 	~Monster();
 	bool act();
 	void startMoving();
+	void startChasing();
+	void stopMoving();
+	bool isChasing();
+	string chase();
 	char nextMove();
 };
 

@@ -6,17 +6,13 @@ using namespace std;
 class Player : public Agent
 {
 private:
-	bool won;
-	bool quit;
+	static bool won;
 
 public:
 	Player(string name, Room *startingRoom);
 	~Player();
 	bool act();
-	void playerEscaped();
-	bool gameOn();
-	bool playerWon();
-	char nextMove() { return 0; };
-	void startMoving() {};
+	static void playerEscaped();
+	static bool playerWon();
 };
 

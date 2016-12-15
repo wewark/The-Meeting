@@ -16,6 +16,11 @@ Agent::~Agent()
 {
 }
 
+Room * Agent::getCurrentRoom() const
+{
+	return currentRoom;
+}
+
 bool Agent::move(string direction)
 {
 	if (currentRoom->getLinked(direction) != NULL)
