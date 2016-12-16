@@ -1,15 +1,26 @@
 #include "Room.h"
 
-int Room::secretCounter = 0;
-Player *Room::player = NULL;
+Room::Room()
+{
+	name = "";
+	description = "";
+	block = false;
+	detected = false;
+
+	// Linked to nothing
+	north = NULL;
+	south = NULL;
+	east = NULL;
+	west = NULL;
+}
 
 Room::Room(string name, string description) {
 
 	this->name = name;
 	this->description = description;
 	type = "room";
-
-	secretCounter = 0;
+	block = false;
+	detected = false;
 
 	// Linked to nothing
 	north = NULL;
@@ -23,8 +34,8 @@ Room::Room(string name, string description, string type) {
 	this->name = name;
 	this->description = description;
 	this->type = type;
-
-	secretCounter = 0;
+	block = false;
+	detected = false;
 
 	// Linked to nothing
 	north = NULL;
@@ -37,10 +48,6 @@ Room::~Room()
 {
 }
 
-void Room::setPlayer(Player &player1) {
-	player = &player1;
-}
-
 string Room::getName() const {
 	return name;
 }
@@ -49,232 +56,156 @@ string Room::getDescription() const {
 	return description;
 }
 
-// Link room to another room, one way
-void Room::link(Room *r, string direction) {
+void Room::setNum(int n)
+{
+	roomNum = n;
+}
 
-	if (direction == "north")
+int Room::getNum() const
+{
+	return roomNum;
+}
+
+void Room::printMap(Room** room)
+{
+	// Find the player room
+	int player_i, player_j;
+	for (int i = 0; i < MAP_SIZE; i++)
+		for (int j = 0; j < MAP_SIZE; j++)
+			if (room[i][j].occupantsSize > 0 &&
+				room[i][j].occupants[0]->getName() == "Player1" ||
+				room[i][j].occupantsSize > 1 &&
+				room[i][j].occupants[1]->getName() == "Player1")
+			{
+				player_i = i, player_j = j;
+				break;
+			}
+
+	// Detect all around it
+	detectAround(room, player_i, player_j);
+
+	// Print the map
+	for (int i = 0; i < MAP_SIZE; i++)
 	{
-		north = r;
-	}
-	else if (direction == "south")
-	{
-		south = r;
-	}
-	else if (direction == "east")
-	{
-		east = r;
-	}
-	else if (direction == "west")
-	{
-		west = r;
+		for (int j = 0; j < MAP_SIZE; j++)
+			if (!room[i][j].isDetected())
+				cout << '?';
+			else if (room[i][j].isBlock())
+				cout << '#';
+			else if (room[i][j].occupantsSize == 0)
+				cout << ' ';
+			else if (room[i][j].occupants[0]->getName() == "Player1")
+				cout << 'X';
+			else
+				cout << room[i][j].occupants[0]->nextMove();
+		cout << endl;
 	}
 }
 
-// Get room linked in a certain direction
-const Room *Room::getLinked(string direction) {
+void Room::makeBlock()
+{
+	block = true;
+}
 
+void Room::unBlock()
+{
+	block = false;
+}
+
+bool Room::isBlock()
+{
+	return block;
+}
+
+// Link room to another room, one way
+void Room::link(Room *r, string direction) {
 	if (direction == "north")
-	{
-		return north;
-	}
+		north = r;
 	else if (direction == "south")
-	{
-		return south;
-	}
+		south = r;
 	else if (direction == "east")
-	{
-		return east;
-	}
+		east = r;
 	else if (direction == "west")
-	{
+		west = r;
+}
+
+// Get room linked in a certain direction
+Room *Room::getLinked(string direction) {
+	if (direction == "north")
+		return north;
+	else if (direction == "south")
+		return south;
+	else if (direction == "east")
+		return east;
+	else if (direction == "west")
 		return west;
-	}
 	else return NULL;
 }
 
 // Print the name of the room linked in each direction
 void Room::printLinked() {
-	cout << "North:\t" << (north == NULL ? "A wall" : north->getName()) << endl;
-	cout << "South:\t" << (south == NULL ? "A wall" : south->getName()) << endl;
-	cout << "East:\t" << (east == NULL ? "A wall" : east->getName()) << endl;
-	cout << "West:\t" << (west == NULL ? "A wall" : west->getName()) << endl;
+	cout << "You can go:" << endl;
+	if (north != NULL)
+		cout << "North (n)" << endl;
+	if (south != NULL)
+		cout << "South (s)" << endl;
+	if (east != NULL)
+		cout << "East (e)" << endl;
+	if (west != NULL)
+		cout << "West (w)" << endl;
+	cout << "Wait (wt)" << endl;
 }
 
-// Link 2 rooms, both ways
-void Room::linkTo(Room &r, string direction) {
-
-	// Link this room to the other one
-	link(&r, direction);
-
-	// Link the other room to this one
-	r.link(this, !direction);
+void Room::enter(Agent *a)
+{
+	occupants[occupantsSize++] = a;
 }
 
-string operator ! (string &direction) {
-
-	if (direction == "north")
-	{
-		return "south";
-	}
-	else if (direction == "south")
-	{
-		return "north";
-	}
-	else if (direction == "east")
-	{
-		return "west";
-	}
-	else if (direction == "west")
-	{
-		return "east";
-	}
-	else return "Direction error";
+void Room::leave(Agent *a)
+{
+	for (int i = 0; i < occupantsSize; i++)
+		if (occupants[i]->getName() == a->getName())
+		{
+			for (int j = i + 1; j < occupantsSize; j++)
+				occupants[j - 1] = occupants[j];
+			break;
+		}
+	occupantsSize--;
 }
 
-istream &operator >> (istream &strm, Room *&currentRoom) {
-
-	// Print linked rooms
-	//currentRoom.printLinked();
-
-	string response;
-	cout << "Go: ";
-	strm >> response;
-	system("cls");
-
-	if (response == "quit")
-	{
-		Room::player->quitGame();
-	}
-	else if (response == "north")
-	{
-		// If the direction leads no nothing (the direction pointer is pointing at NULL)
-		if (currentRoom->north == NULL)
-		{
-			cout << endl;
-			if (currentRoom->type == "balcony")
-				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
-			
-			else if (currentRoom->type == "secret")
-				cout << "Darkness!!" << endl;
-
-			else if (currentRoom->type == "hall")
-				cout << "The door is locked." << endl;
-
-			else
-				cout << "You hit a wall!!" << endl;
-		}
-
-		// Else change the current room to be the other room
-		else
-			currentRoom = currentRoom->north;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
-	}
-
-	else if (response == "south")
-	{
-		if (currentRoom->south == NULL)
-		{
-			cout << endl;
-			if (currentRoom->type == "balcony")
-				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
-
-			else if (currentRoom->type == "secret")
-				cout << "Darkness!!" << endl;
-
-			else
-				cout << "You hit a wall!!" << endl;
-		}
-		else
-			currentRoom = currentRoom->south;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
-	}
-
-	else if (response == "east")
-	{
-		if (currentRoom->east == NULL)
-		{
-			cout << endl;
-			if (currentRoom->type == "balcony")
-				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
-
-			else
-				cout << "You hit a wall!!" << endl;
-		}
-		else
-			currentRoom = currentRoom->east;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
-	}
-
-	else if (response == "west")
-	{
-		if (currentRoom->west == NULL)
-		{
-			cout << endl;
-			if (currentRoom->type == "balcony")
-				cout << "No, man. You're gonna die if you jump off the balcony." << endl;
-
-			else if (currentRoom->type == "secret")
-				cout << "Darkness!!" << endl;
-
-			else
-				cout << "You hit a wall!!" << endl;
-		}
-
-		// The door of the house
-		else if (currentRoom->type == "hall")
-		{
-			if (!Room::player->hasKey())
-				cout << endl << "The door of the house is locked!!" << endl;
-
-			else if (Room::player->hasKey())
-				Room::player->playerEscaped();
-		}
-
-		// The wall leading to the secret room
-		else if (currentRoom->type == "bedroom2")
-		{
-			if (Room::secretCounter == 0)
-			{
-				cout << endl << "You touched the wall, but a strange thing happend, the wall moved a little bit." << endl;
-				Room::secretCounter++;
-			}
-			else if (Room::secretCounter == 1)
-			{
-				cout << endl << "The wall moved alittle bit more, it seems to be rotating around its center. It's so heavy." << endl;
-				Room::secretCounter++;
-			}
-			else if (Room::secretCounter == 2)
-			{
-				cout << endl << "OMG It's moving by itself now, rotating around its center. A very dark room appeared behind it." << endl << "There is a key in the dark room on the floor, you picked that key up." << endl;
-				Room::player->takeKey();
-				Room::secretCounter++;
-				currentRoom = currentRoom->west;
-			}
-			else
-				currentRoom = currentRoom->west;
-		}
-
-		else
-			currentRoom = currentRoom->west;
-
-		// Increment time passed by 1 min
-		(*Room::player)++;
-	}
-
-	else
-		cout << "Wrong command, you can only go north, south, east or west." << endl;
-	return strm;
+int Room::getOccupantsSize()
+{
+	return occupantsSize;
 }
 
-ostream &operator << (ostream &strm, const Room *currentRoom) {
-	strm << endl << currentRoom->getName() << endl << endl;
-	strm << "Time: " << Room::player->getTime() << endl;
-	strm << currentRoom->getDescription() << endl << endl;
-	return strm;
+void Room::detect()
+{
+	detected = true;
+}
+
+bool Room::isDetected()
+{
+	return detected;
+}
+
+void Room::detectAround(Room ** room, int player_i, int player_j)
+{
+	room[player_i][player_j].detect();
+	// The 8 neighbors
+	if (player_i > 0)
+		room[player_i - 1][player_j].detect();
+	if (player_i > 0 && player_j > 0)
+		room[player_i - 1][player_j - 1].detect();
+	if (player_i > 0 && player_j < MAP_SIZE - 1)
+		room[player_i - 1][player_j + 1].detect();
+	if (player_j > 0)
+		room[player_i][player_j - 1].detect();
+	if (player_j < MAP_SIZE - 1)
+		room[player_i][player_j + 1].detect();
+	if (player_i < MAP_SIZE - 1)
+		room[player_i + 1][player_j].detect();
+	if (player_i < MAP_SIZE - 1 && player_j > 0)
+		room[player_i + 1][player_j - 1].detect();
+	if (player_i < MAP_SIZE - 1 && player_j < MAP_SIZE - 1)
+		room[player_i + 1][player_j + 1].detect();
 }

@@ -1,97 +1,79 @@
 #include "Player.h"
-#include <ctime>
 
-int Player::deadline = 60;
+bool Player::won = false;
 
-Player::Player()
+Player::Player(string name, Room * startingRoom) : Agent(name, startingRoom)
 {
-	time_t now = time(0);
-	struct tm ltm;
-	localtime_s(&ltm, &now);
-	hour = ltm.tm_hour;
-	min = ltm.tm_min;
-	passedMins = 0;
 	won = false;
-	key = false;
-	quit = false;
 }
 
 Player::~Player()
 {
 }
 
-void Player::operator ++ (int) {
-	passedMins++;
-	min++;
-	hour += min / 60;
-	min %= 60;
-	hour %= 24;
-}
+bool Player::act()
+{
+	currentRoom->printLinked();
+	string response;
+	cin >> response;
+	
+	// Convert abbreviations
+	if (response == "n")
+		response = "north";
+	else if (response == "s")
+		response = "south";
+	else if (response == "e")
+		response = "east";
+	else if (response == "w")
+		response = "west";
+	else if (response == "wt")
+		response = "wait";
 
-bool Player::tooLate() {
-	if (passedMins <= deadline)
+	// While the choice is wrong, keep prompting
+	while (
+		!(response == "north" || response == "south" ||
+			response == "east" || response == "west" ||
+			response == "wait")
+		|| (response == "north" || response == "south" ||
+			response == "east" || response == "west")
+		&& currentRoom->getLinked(response) == NULL)
+	{
+		cout << "Wrong choice! Try again" << endl;
+		cin >> response;
+		// Convert abbreviations
+		if (response == "n")
+			response = "north";
+		else if (response == "s")
+			response = "south";
+		else if (response == "e")
+			response = "east";
+		else if (response == "w")
+			response = "west";
+		else if (response == "wt")
+			response = "wait";
+	}
+
+	if (response == "north" || response == "south" ||
+		response == "east" || response == "west")
+	{
+		currentRoom->leave(this);
+		currentRoom = currentRoom->getLinked(response);
+		currentRoom->enter(this);
+	}
+	if (currentRoom->getOccupantsSize() > 1)
 		return false;
+	if (currentRoom->getNum() == 5)
+	{
+		playerEscaped();
+		return false;
+	}
 	return true;
-}
-
-string Player::getTime() {
-	string hrs = to_string(hour % 12);
-	string mins = to_string(min);
-
-	string ampm = "AM";
-	if ((hour + 1) % 24 >= 12)
-		ampm = "PM";
-	if (hrs.length() == 1)
-		hrs = "0" + hrs;
-	if (mins.length() == 1)
-		mins = "0" + mins;
-
-	return hrs + ":" + mins + " " + ampm;
-}
-
-string Player::getDeadlineTime() {
-	string hrs = to_string((hour + 1) % 12);
-	string mins = to_string(min);
-
-	string ampm = "AM";
-	if ((hour + 1) % 24 >= 12)
-		ampm = "PM";
-	if (hrs.length() == 1)
-		hrs = "0" + hrs;
-	if (mins.length() == 1)
-		mins = "0" + mins;
-
-	return hrs + ":" + mins + " " + ampm;
 }
 
 void Player::playerEscaped() {
 	won = true;
 }
 
-bool Player::gameOn() {
-	return !(won || tooLate() || quit);
-}
-
-void Player::takeKey() {
-	key = true;
-}
-
-bool Player::hasKey() {
-	return key;
-}
-
 bool Player::playerWon() {
 	return won;
-}
-
-int Player::getPassedMins() {
-	return passedMins;
-}
-
-void Player::quitGame() {
-	quit = true;
-}
-
-bool Player::quitted() {
-	return quit;
 }

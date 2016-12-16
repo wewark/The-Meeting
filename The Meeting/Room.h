@@ -1,42 +1,51 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "Player.h"
+#include "Agent.h"
 using namespace std;
 
 class Room;
-class Player;
-
-string operator ! (string&);
-istream &operator >> (istream &, Room *&);
-ostream &operator << (ostream &, const Room *);
+class Agent;
+#define MAX_SIZE 2
+#define MAP_SIZE 11
 
 class Room
 {
-private:
+protected:
 	string name;
 	string description;
+	int roomNum;
 	Room *north;
 	Room *south;
 	Room *east;
 	Room *west;
 	string type;
-	static Player *player;
-	static int secretCounter;
+	bool block;
+	Agent* occupants[MAX_SIZE];
+	int occupantsSize = 0;
+	bool detected;
 
 public:
+	Room();
 	Room(string name, string description);
 	Room(string name, string description, string type);
 	~Room();
 	string getName() const;
 	string getDescription() const;
+	void setNum(int n);
+	int getNum() const;
+	static void printMap(Room** room);
+	void makeBlock();
+	void unBlock();
+	bool isBlock();
 	void link(Room *r, string direction);
-	const Room *getLinked(string direction);
+	Room *getLinked(string direction);
 	void printLinked();
-	void linkTo(Room &r, string direction);
-	static void setPlayer(Player &);
-
-	friend istream &operator >> (istream &, Room *&);
-	friend ostream &operator << (ostream &, const Room *);
+	void enter(Agent *a);
+	void leave(Agent *a);
+	int getOccupantsSize();
+	void detect();
+	bool isDetected();
+	static void detectAround(Room** room, int player_i, int player_j);
 };
 
