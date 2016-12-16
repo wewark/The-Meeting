@@ -5,6 +5,7 @@ Room::Room()
 	name = "";
 	description = "";
 	block = false;
+	detected = false;
 
 	// Linked to nothing
 	north = NULL;
@@ -18,6 +19,8 @@ Room::Room(string name, string description) {
 	this->name = name;
 	this->description = description;
 	type = "room";
+	block = false;
+	detected = false;
 
 	// Linked to nothing
 	north = NULL;
@@ -31,6 +34,8 @@ Room::Room(string name, string description, string type) {
 	this->name = name;
 	this->description = description;
 	this->type = type;
+	block = false;
+	detected = false;
 
 	// Linked to nothing
 	north = NULL;
@@ -63,10 +68,29 @@ int Room::getNum() const
 
 void Room::printMap(Room** room)
 {
+	// Find the player room
+	int player_i, player_j;
+	for (int i = 0; i < MAP_SIZE; i++)
+		for (int j = 0; j < MAP_SIZE; j++)
+			if (room[i][j].occupantsSize > 0 &&
+				room[i][j].occupants[0]->getName() == "Player1" ||
+				room[i][j].occupantsSize > 1 &&
+				room[i][j].occupants[1]->getName() == "Player1")
+			{
+				player_i = i, player_j = j;
+				break;
+			}
+
+	// Detect all around it
+	detectAround(room, player_i, player_j);
+
+	// Print the map
 	for (int i = 0; i < MAP_SIZE; i++)
 	{
 		for (int j = 0; j < MAP_SIZE; j++)
-			if (room[i][j].isBlock())
+			if (!room[i][j].isDetected())
+				cout << '?';
+			else if (room[i][j].isBlock())
 				cout << '#';
 			else if (room[i][j].occupantsSize == 0)
 				cout << ' ';
@@ -152,4 +176,36 @@ void Room::leave(Agent *a)
 int Room::getOccupantsSize()
 {
 	return occupantsSize;
+}
+
+void Room::detect()
+{
+	detected = true;
+}
+
+bool Room::isDetected()
+{
+	return detected;
+}
+
+void Room::detectAround(Room ** room, int player_i, int player_j)
+{
+	room[player_i][player_j].detect();
+	// The 8 neighbors
+	if (player_i > 0)
+		room[player_i - 1][player_j].detect();
+	if (player_i > 0 && player_j > 0)
+		room[player_i - 1][player_j - 1].detect();
+	if (player_i > 0 && player_j < MAP_SIZE - 1)
+		room[player_i - 1][player_j + 1].detect();
+	if (player_j > 0)
+		room[player_i][player_j - 1].detect();
+	if (player_j < MAP_SIZE - 1)
+		room[player_i][player_j + 1].detect();
+	if (player_i < MAP_SIZE - 1)
+		room[player_i + 1][player_j].detect();
+	if (player_i < MAP_SIZE - 1 && player_j > 0)
+		room[player_i + 1][player_j - 1].detect();
+	if (player_i < MAP_SIZE - 1 && player_j < MAP_SIZE - 1)
+		room[player_i + 1][player_j + 1].detect();
 }

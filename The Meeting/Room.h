@@ -23,6 +23,7 @@ protected:
 	bool block;
 	Agent* occupants[MAX_SIZE];
 	int occupantsSize = 0;
+	bool detected;
 
 public:
 	Room();
@@ -43,5 +44,8 @@ public:
 	void enter(Agent *a);
 	void leave(Agent *a);
 	int getOccupantsSize();
+	void detect();
+	bool isDetected();
+	static void detectAround(Room** room, int player_i, int player_j);
 };
 

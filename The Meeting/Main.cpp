@@ -69,8 +69,7 @@ int main() {
 		Agent **agents = new Agent*[3]{ player, m1,m2 };
 
 		bool end = false;
-		int cnt1 = 0;
-		string warning = "";
+		string warning = "That's a map of the maze.\n\nX -> You\n# -> Wall\n  -> Space\n? -> Unknown";
 		while (!end)
 		{
 			system("cls");
@@ -93,11 +92,10 @@ int main() {
 				Room::printMap(room);
 				string response;
 				if (Player::playerWon())
-					cout << "You Escaped\nGOOD JOB!!" << endl;
+					cout << "\nYou Escaped\nGOOD JOB!!" << endl;
 				else
-					cout << "You got eaten" << endl;
-				cin.ignore(), cin.get();
-				cout << endl << "Again or quit?" << endl;
+					cout << "\nYou got eaten" << endl;
+				cout << "\nAgain or quit?" << endl;
 				cin >> response;
 				if (response != "again")
 					exitGame = true;
@@ -136,6 +134,14 @@ int main() {
 				room[5][5].link(&room[4][5], "north");
 				m2->startMoving();
 				m2->startChasing();
+			}
+
+			// Monster2 sleeps
+			if (room[4][5].isBlock() &&
+				m2->getCurrentRoom()->getNum() == 16 &&
+				player->getCurrentRoom()->getNum() == 15)
+			{
+				warning = "It's sleeping. It won't move.";
 			}
 
 			// Monster2 starts chasing once you get close to it
